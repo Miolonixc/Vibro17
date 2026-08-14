@@ -68,6 +68,18 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/editorFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:contentDescription="Редактор"
+        android:src="@android:drawable/ic_menu_edit"
+        app:backgroundTint="@color/surface_raised"
+        app:tint="@color/cyan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/stopFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
