@@ -27,8 +27,14 @@ class VibrationEngine(context: Context) {
 
     @SuppressLint("MissingPermission")
     fun play(effect: VibroEffect) {
+        val amplitudes = if (effect.amplitudes.size == effect.timings.size) {
+            effect.amplitudes
+        } else {
+            // Defensive: never let a malformed effect crash the app.
+            IntArray(effect.timings.size) { i -> effect.amplitudes.getOrElse(i) { 0 } }
+        }
         val vibration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            VibrationEffect.createWaveform(effect.timings, effect.amplitudes, effect.repeat)
+            VibrationEffect.createWaveform(effect.timings, amplitudes, effect.repeat)
         } else {
             @Suppress("DEPRECATION")
             VibrationEffect.createWaveform(effect.timings, effect.repeat)
