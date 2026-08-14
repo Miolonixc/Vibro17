@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Vibro 17</string>
+    <string name="title_main">VIBRO 17</string>
+    <string name="subtitle_main">Эффекты вибрации · Android 17</string>
+    <string name="hint_tap">Нажми на эффект, чтобы запустить. Ещё раз — остановить.</string>
+    <string name="status_idle">Ожидание…</string>
+    <string name="status_playing">Играет: %1$s</string>
+    <string name="no_vibrator">В этом устройстве нет вибромотора.</string>
+</resources>

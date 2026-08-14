@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <background android:drawable="@color/black"/>
+    <group>
+        <!-- antennae -->
+        <path android:fillColor="#00E5FF"
+            android:pathData="M34,30 L30,14 L36,16 L40,30 Z"/>
+        <path android:fillColor="#00E5FF"
+            android:pathData="M74,30 L78,14 L72,16 L68,30 Z"/>
+        <!-- head -->
+        <path android:fillColor="#121922"
+            android:strokeColor="#00E5FF" android:strokeWidth="3"
+            android:pathData="M30,32 h48 a10,10 0 0 1 10,10 v18 a10,10 0 0 1 -10,10 h-48 a10,10 0 0 1 -10,-10 v-18 a10,10 0 0 1 10,-10 Z"/>
+        <!-- eyes -->
+        <path android:fillColor="#00E5FF"
+            android:pathData="M38,48 h10 v6 h-10 Z"/>
+        <path android:fillColor="#00E5FF"
+            android:pathData="M60,48 h10 v6 h-10 Z"/>
+        <!-- mouth grid -->
+        <path android:strokeColor="#0093A6" android:strokeWidth="2"
+            android:pathData="M42,62 h24 M48,58 v8 M54,58 v8 M60,58 v8"/>
+    </group>
+</vector>
