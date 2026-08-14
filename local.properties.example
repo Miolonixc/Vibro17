@@ -1,0 +1,8 @@
+# Copy this file to `local.properties` and fill in your own values.
+# local.properties is gitignored — real secrets must never be committed.
+
+# Path to the release keystore (relative to project root or absolute).
+VIBRO17_KEYSTORE_FILE=keys/vibro17-release.keystore
+VIBRO17_KEYSTORE_PASSWORD=CHANGE_ME
+VIBRO17_KEY_ALIAS=vibro17
+VIBRO17_KEY_PASSWORD=CHANGE_ME

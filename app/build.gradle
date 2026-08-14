@@ -3,6 +3,22 @@ plugins {
     id 'org.jetbrains.kotlin.android'
 }
 
+// --- Semantic versioning -------------------------------------------------
+// 0.0.x  – патчи / мелкие правки (исправление багов)
+// 0.x.0  – минорные обновления (новые эффекты, экраны)
+// x.0.0  – мажорные обновления (ломающие изменения, редизайн)
+// versionCode вычисляется из versionName: MAJOR*10000 + MINOR*100 + PATCH
+def versionNameValue = '0.0.1'
+def versionParts = versionNameValue.tokenize('.').collect { it.toInteger() }
+def versionCodeValue = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
+
+// --- Локальные секреты подписи (local.properties, gitignored) ------------
+def localProps = new Properties()
+def localPropsFile = rootProject.file('local.properties')
+if (localPropsFile.exists()) {
+    localPropsFile.withInputStream { localProps.load(it) }
+}
+
 android {
     namespace 'com.miolonixc.vibro17'
     compileSdk 34
@@ -11,14 +27,33 @@ android {
         applicationId 'com.miolonixc.vibro17'
         minSdk 21
         targetSdk 34
-        versionCode 1
-        versionName '1.0.0'
+        versionCode versionCodeValue
+        versionName versionNameValue
+    }
+
+    signingConfigs {
+        create('release') {
+            def ksPath = localProps['VIBRO17_KEYSTORE_FILE']
+            def ksFile = ksPath ? file(ksPath) : null
+            if (ksFile != null && ksFile.exists()) {
+                storeFile = ksFile
+                storePassword = localProps['VIBRO17_KEYSTORE_PASSWORD']
+                keyAlias = localProps['VIBRO17_KEY_ALIAS']
+                keyPassword = localProps['VIBRO17_KEY_PASSWORD']
+                enableV1Signing = true
+                enableV2Signing = true
+            }
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            def releaseConfig = signingConfigs.findByName('release')
+            if (releaseConfig != null && releaseConfig.storeFile != null) {
+                signingConfig = releaseConfig
+            }
         }
     }
 
