@@ -2,7 +2,9 @@ package com.miolonixc.vibro17.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
+import com.miolonixc.vibro17.R
 import com.miolonixc.vibro17.databinding.ItemEffectBinding
 import com.miolonixc.vibro17.model.VibroEffect
 
@@ -35,6 +37,18 @@ class EffectAdapter(
             binding.card.setCardBackgroundColor(
                 if (active) 0xFF1A2430.toInt() else 0xFF121922.toInt()
             )
+
+            if (active) {
+                if (binding.card.animation == null) {
+                    binding.card.startAnimation(
+                        AnimationUtils.loadAnimation(binding.root.context, R.anim.pulse)
+                    )
+                }
+            } else {
+                binding.card.clearAnimation()
+                binding.card.scaleX = 1f
+                binding.card.scaleY = 1f
+            }
 
             binding.root.setOnClickListener {
                 onSelect(effect, effect.id == activeId)

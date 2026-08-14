@@ -1,6 +1,7 @@
 package com.miolonixc.vibro17.ui
 
 import android.os.Bundle
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import com.miolonixc.vibro17.R
 import androidx.core.content.ContextCompat
@@ -40,6 +41,12 @@ class MainActivity : AppCompatActivity() {
         binding.statusText.setTextColor(
             ContextCompat.getColor(this, R.color.cyan)
         )
+        binding.liveDot.visibility = android.view.View.VISIBLE
+        if (binding.liveDot.animation == null) {
+            binding.liveDot.startAnimation(
+                AnimationUtils.loadAnimation(this, R.anim.blink)
+            )
+        }
     }
 
     private fun stopEffect() {
@@ -50,6 +57,8 @@ class MainActivity : AppCompatActivity() {
         binding.statusText.setTextColor(
             ContextCompat.getColor(this, R.color.cyan_glow)
         )
+        binding.liveDot.clearAnimation()
+        binding.liveDot.visibility = android.view.View.INVISIBLE
     }
 
     override fun onPause() {

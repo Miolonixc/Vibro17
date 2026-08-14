@@ -102,6 +102,78 @@ object Effects {
                 0
             ),
             repeat = -1
+        ),
+        VibroEffect(
+            id = "party",
+            title = "Вечеринка",
+            subtitle = "Стробоскопическая дискотека",
+            icon = "🪩",
+            timings = longArrayOf(0, 50, 40, 50, 40, 90, 40, 50, 40, 70, 40, 250),
+            amplitudes = intArrayOf(0, 255, 0, 200, 0, 255, 0, 200, 0, 255, 0, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "bass",
+            title = "Басы",
+            subtitle = "Глубокие удары сабвуфера",
+            icon = "🔊",
+            timings = longArrayOf(0, 220, 140, 220, 140, 220, 400),
+            amplitudes = intArrayOf(0, 255, 0, 255, 0, 255, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "drill",
+            title = "Дрель",
+            subtitle = "Ровный гул электроинструмента",
+            icon = "🛠️",
+            timings = longArrayOf(0, 30, 30, 30, 30, 30, 30),
+            amplitudes = intArrayOf(0, 180, 0, 200, 0, 180, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "grinder",
+            title = "Кофемолка",
+            subtitle = "Дробное вибрирующее жужжание",
+            icon = "☕",
+            timings = longArrayOf(0, 20, 15, 20, 15, 20, 15, 20, 15, 20, 15, 300),
+            amplitudes = intArrayOf(0, 160, 0, 160, 0, 160, 0, 160, 0, 160, 0, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "alien",
+            title = "Инопланетянин",
+            subtitle = "Загадочное переливающееся жужжание",
+            icon = "👽",
+            timings = longArrayOf(0, 35, 25, 35, 25, 35, 25, 35, 25, 300),
+            amplitudes = intArrayOf(0, 90, 0, 200, 0, 90, 0, 200, 0, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "rain",
+            title = "Дождь",
+            subtitle = "Мягкие случайные капли",
+            icon = "🌧️",
+            timings = longArrayOf(0, 30, 60, 30, 80, 30, 60, 30, 100, 250),
+            amplitudes = intArrayOf(0, 80, 0, 100, 0, 80, 0, 100, 0, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "explosion",
+            title = "Взрыв",
+            subtitle = "Мощный удар с затуханием",
+            icon = "💥",
+            timings = longArrayOf(0, 300, 80, 150, 80, 100, 300),
+            amplitudes = intArrayOf(0, 255, 0, 180, 0, 120, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "crawl",
+            title = "Ползти",
+            subtitle = "Разгони телефон по столу",
+            icon = "📱",
+            timings = longArrayOf(0, 80, 20),
+            amplitudes = intArrayOf(0, 255, 0),
+            repeat = 0
         )
     )
 }
