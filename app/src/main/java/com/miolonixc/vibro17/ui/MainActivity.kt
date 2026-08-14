@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var engine: VibrationEngine
     private lateinit var adapter: EffectAdapter
 
-    private val effects = (Effects.ALL + CustomStore.load(this)).toMutableList()
+    private val effects = Effects.ALL.toMutableList()
 
     private var active: VibroEffect? = null
 
@@ -52,6 +52,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         engine = VibrationEngine(this)
+
+        effects.addAll(CustomStore.load(this))
 
         adapter = EffectAdapter(effects) { effect, isActive ->
             if (isActive) stopEffect() else startEffect(effect)
