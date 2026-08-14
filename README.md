@@ -1,5 +1,7 @@
 # Vibro 17 🤖
 
+![Build APK](https://github.com/Miolonixc/Vibro17/actions/workflows/build.yml/badge.svg)
+
 **Vibro 17** — Android-приложение в стиле Android 17 (Dragon Ball): тёмная тема,
 электрический циан и набор вибро-эффектов для любых ситуаций.
 
