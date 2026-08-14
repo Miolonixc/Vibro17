@@ -2,6 +2,7 @@ package com.miolonixc.vibro17.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.miolonixc.vibro17.R
 import androidx.core.content.ContextCompat
 import com.miolonixc.vibro17.databinding.ActivityMainBinding
 import com.miolonixc.vibro17.engine.VibrationEngine
@@ -37,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setActive(effect.id)
         binding.statusText.text = getString(R.string.status_playing, effect.title)
         binding.statusText.setTextColor(
-            ContextCompat.getColor(this, com.miolonixc.vibro17.R.color.cyan)
+            ContextCompat.getColor(this, R.color.cyan)
         )
     }
 
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setActive(null)
         binding.statusText.text = getString(R.string.status_idle)
         binding.statusText.setTextColor(
-            ContextCompat.getColor(this, com.miolonixc.vibro17.R.color.cyan_glow)
+            ContextCompat.getColor(this, R.color.cyan_glow)
         )
     }
 

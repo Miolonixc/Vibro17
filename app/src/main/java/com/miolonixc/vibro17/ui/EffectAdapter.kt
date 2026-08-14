@@ -32,10 +32,9 @@ class EffectAdapter(
             val active = effect.id == activeId
             binding.card.strokeColor = if (active) 0xFF00E5FF.toInt() else 0xFF0093A6.toInt()
             binding.card.strokeWidth = if (active) 3 else 1
-            binding.card.cardBackgroundColor = if (active)
-                android.content.res.ColorStateList.valueOf(0xFF1A2430.toInt())
-            else
-                android.content.res.ColorStateList.valueOf(0xFF121922.toInt())
+            binding.card.setCardBackgroundColor(
+                if (active) 0xFF1A2430.toInt() else 0xFF121922.toInt()
+            )
 
             binding.root.setOnClickListener {
                 onSelect(effect, effect.id == activeId)
