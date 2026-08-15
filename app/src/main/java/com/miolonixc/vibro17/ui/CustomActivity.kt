@@ -83,9 +83,24 @@ class CustomActivity : AppCompatActivity() {
         b.amplitudeLabel.text = "Сила: ${step.amplitude}" + if (step.amplitude == 0) " (пауза)" else ""
     }
 
-    private fun buildEffect(): VibroEffect {
-        val timings = LongArray(steps.size) { steps[it].duration.toLong() }
-        val amplitudes = IntArray(steps.size) { steps[it].amplitude }
+    private fun buildEffect(applyRamp: Boolean = false): VibroEffect {
+        val baseTimings = LongArray(steps.size) { steps[it].duration.toLong() }
+        val baseAmplitudes = IntArray(steps.size) { steps[it].amplitude }
+        val (timings, amplitudes) = if (applyRamp && steps.size >= 3) {
+            val n = baseAmplitudes.size
+            val envelope = FloatArray(n) { i ->
+                val t = i.toFloat() / (n - 1).coerceAtLeast(1)
+                when {
+                    t < 0.3f -> t / 0.3f
+                    t > 0.7f -> (1f - t) / 0.3f
+                    else -> 1f
+                }.coerceIn(0f, 1f)
+            }
+            val ramped = IntArray(n) { i -> (baseAmplitudes[i] * envelope[i]).toInt().coerceAtMost(255) }
+            baseTimings to ramped
+        } else {
+            baseTimings to baseAmplitudes
+        }
         val name = binding.nameInput.text.toString().trim().ifEmpty { "Мой эффект" }
         return VibroEffect(
             id = editId ?: CustomStore.newId(),
@@ -103,7 +118,7 @@ class CustomActivity : AppCompatActivity() {
             Toast.makeText(this, "Добавь хотя бы один шаг", Toast.LENGTH_SHORT).show()
             return
         }
-        engine.play(buildEffect())
+        engine.play(buildEffect(binding.rampSwitch.isChecked))
     }
 
     private fun save() {
@@ -111,7 +126,7 @@ class CustomActivity : AppCompatActivity() {
             Toast.makeText(this, "Добавь хотя бы один шаг", Toast.LENGTH_SHORT).show()
             return
         }
-        val effect = buildEffect()
+        val effect = buildEffect(binding.rampSwitch.isChecked)
         val intent = Intent().apply {
             putExtra("id", effect.id)
             putExtra("title", effect.title)
