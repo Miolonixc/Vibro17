@@ -10,7 +10,8 @@ import com.miolonixc.vibro17.model.VibroEffect
 
 class EffectAdapter(
     private val effects: List<VibroEffect>,
-    private val onSelect: (VibroEffect, isActive: Boolean) -> Unit
+    private val onSelect: (VibroEffect, isActive: Boolean) -> Unit,
+    private val onLongClick: (VibroEffect) -> Unit
 ) : RecyclerView.Adapter<EffectAdapter.ViewHolder>() {
 
     private var activeId: String? = null
@@ -52,6 +53,10 @@ class EffectAdapter(
 
             binding.root.setOnClickListener {
                 onSelect(effect, effect.id == activeId)
+            }
+            binding.root.setOnLongClickListener {
+                onLongClick(effect)
+                true
             }
         }
     }

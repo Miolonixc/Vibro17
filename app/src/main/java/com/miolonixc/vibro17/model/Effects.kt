@@ -174,6 +174,42 @@ object Effects {
             timings = longArrayOf(0, 80, 20),
             amplitudes = intArrayOf(0, 255, 0),
             repeat = 0
+        ),
+        VibroEffect(
+            id = "tattoo",
+            title = "Тату-машинка",
+            subtitle = "Частый дробный жужжащий buzz",
+            icon = "🪥",
+            timings = longArrayOf(0, 15, 10, 15, 10, 15, 10, 15, 10, 15, 10, 300),
+            amplitudes = intArrayOf(0, 200, 0, 200, 0, 200, 0, 200, 0, 200, 0, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "siren",
+            title = "Сирена",
+            subtitle = "Воющий нарастающий/спадающий сигнал",
+            icon = "🚨",
+            timings = longArrayOf(0, 120, 120, 120, 120, 120, 120),
+            amplitudes = intArrayOf(0, 80, 140, 200, 140, 80, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "purr",
+            title = "Мурлыканье",
+            subtitle = "Низкое вибрирующее урчание кота",
+            icon = "😺",
+            timings = longArrayOf(0, 90, 40, 90, 40, 90, 200),
+            amplitudes = intArrayOf(0, 120, 0, 120, 0, 120, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "massage",
+            title = "Массаж",
+            subtitle = "Мягкие успокаивающие импульсы",
+            icon = "💆",
+            timings = longArrayOf(0, 200, 120, 200, 120, 200, 300),
+            amplitudes = intArrayOf(0, 160, 0, 160, 0, 160, 0),
+            repeat = 0
         )
     )
 }

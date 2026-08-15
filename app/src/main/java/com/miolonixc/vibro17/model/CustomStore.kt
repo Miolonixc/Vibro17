@@ -34,6 +34,14 @@ object CustomStore {
         save(context, all)
     }
 
+    fun remove(context: Context, id: String) {
+        val all = load(context).toMutableList()
+        all.removeAll { it.id == id }
+        save(context, all)
+    }
+
+    fun isCustom(id: String): Boolean = id.startsWith("custom_")
+
     fun save(context: Context, list: List<VibroEffect>) {
         val array = JSONArray()
         list.forEach { array.put(toJson(it)) }

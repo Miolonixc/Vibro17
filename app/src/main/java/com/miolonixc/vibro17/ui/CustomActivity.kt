@@ -19,12 +19,26 @@ class CustomActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCustomBinding
     private lateinit var engine: VibrationEngine
     private val steps = mutableListOf(Step(80, 255), Step(80, 0))
+    private var editId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCustomBinding.inflate(layoutInflater)
         setContentView(binding.root)
         engine = VibrationEngine(this)
+
+        editId = intent.getStringExtra("edit_id")
+        if (editId != null) {
+            binding.nameInput.setText(intent.getStringExtra("title") ?: "")
+            val t = intent.getLongArrayExtra("timings")
+            val a = intent.getIntArrayExtra("amplitudes")
+            if (t != null && a != null) {
+                steps.clear()
+                repeat(t.size) { i -> steps.add(Step(t[i].toInt(), a[i])) }
+            }
+            binding.saveBtn.text = "💾 Обновить"
+            binding.deleteBtn.visibility = android.view.View.VISIBLE
+        }
 
         renderSteps()
 
@@ -35,6 +49,7 @@ class CustomActivity : AppCompatActivity() {
 
         binding.previewBtn.setOnClickListener { preview() }
         binding.saveBtn.setOnClickListener { save() }
+        binding.deleteBtn.setOnClickListener { delete() }
     }
 
     private fun renderSteps() {
@@ -73,7 +88,7 @@ class CustomActivity : AppCompatActivity() {
         val amplitudes = IntArray(steps.size) { steps[it].amplitude }
         val name = binding.nameInput.text.toString().trim().ifEmpty { "Мой эффект" }
         return VibroEffect(
-            id = CustomStore.newId(),
+            id = editId ?: CustomStore.newId(),
             title = name,
             subtitle = "Свой эффект · ${steps.size} шагов",
             icon = "✨",
@@ -105,6 +120,16 @@ class CustomActivity : AppCompatActivity() {
             putExtra("repeat", effect.repeat)
             putExtra("timings", effect.timings)
             putExtra("amplitudes", effect.amplitudes)
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    private fun delete() {
+        val id = editId ?: return
+        val intent = Intent().apply {
+            putExtra("deleted", true)
+            putExtra("id", id)
         }
         setResult(Activity.RESULT_OK, intent)
         finish()
