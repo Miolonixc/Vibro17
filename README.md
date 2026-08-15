@@ -128,36 +128,8 @@ APK появится в `app/build/outputs/apk/debug/` или `.../release/`.
 Перенеси `app-debug.apk` на устройство и установи (разреши установку из
 неизвестных источников).
 
-## Версии и релизы
-
-**Семантическое версионирование** (`app/build.gradle` → `versionNameValue`):
-
-- `0.0.x` — патчи / мелкие правки (исправление багов);
-- `0.x.0` — минорные обновления (новые эффекты, экраны);
-- `x.0.0` — мажорные обновления (ломающие изменения, редизайн).
-
-`versionCode` вычисляется из `versionName` автоматически:
-`MAJOR*10000 + MINOR*100 + PATCH` (например, `0.0.2` → 2, `0.1.0` → 100).
-
-**Подписанный релизный APK:**
-
-- ключ хранится в `keys/vibro17-release.keystore` (в `.gitignore`);
-  параметры подписи — в `local.properties` (см. `local.properties.example`);
-- при пуше тега `vX.Y.Z` запускается
-  [`.github/workflows/release.yml`](.github/workflows/release.yml): декодирует
-  keystore из секрета `VIBRO17_KEYSTORE_BASE64`, собирает `app-release.apk` и
-  публикует **GitHub Release** с артефактом.
-
-Секреты репозитория (Settings → Secrets):
-
-`VIBRO17_KEYSTORE_BASE64`, `VIBRO17_KEYSTORE_PASSWORD`,
-`VIBRO17_KEY_ALIAS`, `VIBRO17_KEY_PASSWORD`.
-
-Локально релиз собирается так:
-
-```bash
-./gradlew assembleRelease
-```
+Подробности о версионировании, сборке и публикации релиза — в разделе
+[«Версии и релизы»](#версии-и-релизы) ниже.
 
 ## Планы разработки (roadmap)
 
