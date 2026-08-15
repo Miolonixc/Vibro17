@@ -6,12 +6,14 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.miolonixc.vibro17.R
 import com.miolonixc.vibro17.databinding.ItemEffectBinding
+import com.miolonixc.vibro17.model.FavoritesStore
 import com.miolonixc.vibro17.model.VibroEffect
 
 class EffectAdapter(
     private val effects: List<VibroEffect>,
     private val onSelect: (VibroEffect, isActive: Boolean) -> Unit,
-    private val onLongClick: (VibroEffect) -> Unit
+    private val onLongClick: (VibroEffect) -> Unit,
+    private val onFavorite: (VibroEffect) -> Unit
 ) : RecyclerView.Adapter<EffectAdapter.ViewHolder>() {
 
     private var activeId: String? = null
@@ -57,6 +59,12 @@ class EffectAdapter(
             binding.root.setOnLongClickListener {
                 onLongClick(effect)
                 true
+            }
+
+            val fav = FavoritesStore.isFavorite(binding.root.context, effect.id)
+            binding.favorite.text = if (fav) "★" else "☆"
+            binding.favorite.setOnClickListener {
+                onFavorite(effect)
             }
         }
     }

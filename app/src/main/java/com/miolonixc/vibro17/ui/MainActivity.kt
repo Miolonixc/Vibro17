@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.miolonixc.vibro17.R
+import com.miolonixc.vibro17.BuildConfig
 import androidx.core.content.ContextCompat
 import com.miolonixc.vibro17.databinding.ActivityMainBinding
 import com.miolonixc.vibro17.engine.VibrationEngine
@@ -111,11 +112,13 @@ class MainActivity : AppCompatActivity() {
         engine = VibrationEngine(this)
 
         effects.addAll(CustomStore.load(this))
+        sortFavoritesFirst()
 
         adapter = EffectAdapter(
             effects,
             { effect, isActive -> if (isActive) stopEffect() else startEffect(effect) },
-            { effect -> onLongClickEffect(effect) }
+            { effect -> onLongClickEffect(effect) },
+            { effect -> toggleFavorite(effect) }
         )
         binding.effectGrid.adapter = adapter
 
@@ -127,6 +130,50 @@ class MainActivity : AppCompatActivity() {
         binding.importBtn.setOnClickListener {
             importLauncher.launch(arrayOf("application/json"))
         }
+        binding.aboutBtn.setOnClickListener { showAbout() }
+        setupIntensity()
+    }
+
+    private fun sortFavoritesFirst() {
+        effects.sortBy { if (FavoritesStore.isFavorite(this, it.id)) 0 else 1 }
+    }
+
+    private fun toggleFavorite(effect: VibroEffect) {
+        FavoritesStore.toggle(this, effect.id)
+        sortFavoritesFirst()
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun setupIntensity() {
+        val prefs = getSharedPreferences("vibro_prefs", MODE_PRIVATE)
+        val pct = prefs.getInt("intensity", 100)
+        engine.intensity = pct / 100f
+        binding.intensitySeek.progress = pct
+        binding.intensityValue.text = "$pct%"
+        binding.intensitySeek.setOnSeekBarChangeListener(
+            object : android.widget.SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(s: android.widget.SeekBar?, p: Int, fromUser: Boolean) {
+                    val value = if (p < 5) 5 else p
+                    if (value != p) binding.intensitySeek.progress = value
+                    engine.intensity = value / 100f
+                    binding.intensityValue.text = "$value%"
+                    if (fromUser) prefs.edit().putInt("intensity", value).apply()
+                }
+                override fun onStartTrackingTouch(s: android.widget.SeekBar?) {}
+                override fun onStopTrackingTouch(s: android.widget.SeekBar?) {}
+            }
+        )
+    }
+
+    private fun showAbout() {
+        AlertDialog.Builder(this)
+            .setTitle("Vibro 17")
+            .setMessage(
+                "Версия ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE}).\n\n" +
+                "Эффекты вибрации в стиле Android 17. Собрано и опубликовано на GitHub."
+            )
+            .setPositiveButton(android.R.string.ok, null)
+            .show()
     }
 
     private fun openEditor(effect: VibroEffect?) {

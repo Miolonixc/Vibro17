@@ -92,6 +92,56 @@
             android:contentDescription="Импорт"
             android:backgroundTint="@color/surface_raised"
             android:textColor="@color/cyan" />
+
+        <Button
+            android:id="@+id/aboutBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="ⓘ"
+            android:textSize="16sp"
+            android:contentDescription="О приложении"
+            android:backgroundTint="@color/surface_raised"
+            android:textColor="@color/cyan" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/intensityRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolsRow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сила"
+            android:textSize="13sp"
+            android:textColor="@color/text_secondary" />
+
+        <SeekBar
+            android:id="@+id/intensitySeek"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:max="100"
+            android:progress="100"
+            android:progressTint="@color/cyan"
+            android:thumbTint="@color/cyan" />
+
+        <TextView
+            android:id="@+id/intensityValue"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="100%"
+            android:textSize="13sp"
+            android:textColor="@color/cyan" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -102,7 +152,7 @@
         android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        app:layout_constraintTop_toBottomOf="@id/toolsRow"
+        app:layout_constraintTop_toBottomOf="@id/intensityRow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

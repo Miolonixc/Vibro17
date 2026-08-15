@@ -47,5 +47,15 @@
                 android:textSize="11sp"
                 android:textColor="@color/text_secondary" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:padding="8dp"
+            android:textSize="18sp"
+            android:text="☆"
+            android:textColor="@color/cyan" />
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

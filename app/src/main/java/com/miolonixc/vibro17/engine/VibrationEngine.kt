@@ -22,16 +22,24 @@ class VibrationEngine(context: Context) {
         context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     }
 
+    /** Global intensity multiplier applied to every effect (0.0–1.0). */
+    var intensity: Float = 1.0f
+
     val hasAmplitudeControl: Boolean =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && vibrator.hasAmplitudeControl()
 
     @SuppressLint("MissingPermission")
     fun play(effect: VibroEffect) {
-        val amplitudes = if (effect.amplitudes.size == effect.timings.size) {
+        val base = if (effect.amplitudes.size == effect.timings.size) {
             effect.amplitudes
         } else {
             // Defensive: never let a malformed effect crash the app.
             IntArray(effect.timings.size) { i -> effect.amplitudes.getOrElse(i) { 0 } }
+        }
+        val amplitudes = if (intensity < 1.0f) {
+            IntArray(base.size) { i -> (base[i] * intensity).toInt().coerceAtMost(255) }
+        } else {
+            base
         }
         val vibration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             VibrationEffect.createWaveform(effect.timings, amplitudes, effect.repeat)

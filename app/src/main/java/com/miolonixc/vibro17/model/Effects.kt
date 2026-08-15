@@ -210,6 +210,15 @@ object Effects {
             timings = longArrayOf(0, 200, 120, 200, 120, 200, 300),
             amplitudes = intArrayOf(0, 160, 0, 160, 0, 160, 0),
             repeat = 0
+        ),
+        VibroEffect(
+            id = "sleep",
+            title = "Сон",
+            subtitle = "Убаюкивающее затухание вибрации",
+            icon = "🌙",
+            timings = longArrayOf(0, 200, 400, 180, 500, 160, 600, 140, 800, 120, 1000, 100, 1500),
+            amplitudes = intArrayOf(0, 200, 0, 160, 0, 130, 0, 100, 0, 70, 0, 50, 0),
+            repeat = 0
         )
     )
 }
