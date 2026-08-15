@@ -2,6 +2,7 @@ package com.miolonixc.vibro17.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,7 +24,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var engine: VibrationEngine
     private lateinit var adapter: EffectAdapter
 
-    private val effects = Effects.ALL.toMutableList()
+    private val allEffects = Effects.ALL.toMutableList()
+    private val effects = mutableListOf<VibroEffect>()
+    private var currentCategory = "all"
 
     private val exportLauncher = registerForActivityResult(
         ActivityResultContracts.CreateDocument("application/json")
@@ -49,15 +52,11 @@ class MainActivity : AppCompatActivity() {
             val parsed = CustomStore.parseJson(text)
             parsed.forEach { eff ->
                 CustomStore.add(this, eff)
-                val i = effects.indexOfFirst { it.id == eff.id }
-                if (i >= 0) {
-                    effects[i] = eff
-                    adapter.notifyItemChanged(i)
-                } else {
-                    effects.add(eff)
-                    adapter.notifyItemInserted(effects.lastIndex)
-                }
+                allEffects.removeAll { it.id == eff.id }
+                allEffects.add(eff)
             }
+            rebuildList()
+            Toast.makeText(this, "Импортировано: ${parsed.size}", Toast.LENGTH_SHORT).show()
             Toast.makeText(this, "Импортировано: ${parsed.size}", Toast.LENGTH_SHORT).show()
         } catch (_: Exception) {
             Toast.makeText(this, "Ошибка импорта", Toast.LENGTH_SHORT).show()
@@ -73,12 +72,9 @@ class MainActivity : AppCompatActivity() {
             val data = result.data ?: return@registerForActivityResult
             val id = data.getStringExtra("id") ?: return@registerForActivityResult
             if (data.getBooleanExtra("deleted", false)) {
-                val idx = effects.indexOfFirst { it.id == id }
-                if (idx >= 0) {
-                    effects.removeAt(idx)
-                    adapter.notifyItemRemoved(idx)
-                }
+                allEffects.removeAll { it.id == id }
                 CustomStore.remove(this, id)
+                rebuildList()
                 return@registerForActivityResult
             }
             val effect = VibroEffect(
@@ -91,17 +87,9 @@ class MainActivity : AppCompatActivity() {
                 repeat = data.getIntExtra("repeat", 0)
             )
             CustomStore.add(this, effect)
-            val existing = effects.indexOfFirst { it.id == id }
-            if (existing >= 0) {
-                effects[existing] = effect
-                adapter.notifyItemChanged(existing)
-            } else {
-                effects.add(effect)
-                adapter.notifyItemInserted(effects.lastIndex)
-                binding.effectGrid.post {
-                    binding.effectGrid.scrollToPosition(effects.lastIndex)
-                }
-            }
+            allEffects.removeAll { it.id == id }
+            allEffects.add(effect)
+            rebuildList()
         }
     }
 
@@ -112,8 +100,8 @@ class MainActivity : AppCompatActivity() {
 
         engine = VibrationEngine(this)
 
-        effects.addAll(CustomStore.load(this))
-        sortFavoritesFirst()
+        allEffects.addAll(CustomStore.load(this))
+        rebuildList()
 
         adapter = EffectAdapter(
             effects,
@@ -133,16 +121,32 @@ class MainActivity : AppCompatActivity() {
         }
         binding.aboutBtn.setOnClickListener { showAbout() }
         setupIntensity()
+
+        binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == View.NO_ID) return@setOnCheckedChangeListener
+            val chip = binding.chipGroup.findViewById<View>(checkedId)
+            currentCategory = chip?.tag?.toString() ?: "all"
+            rebuildList()
+        }
     }
 
-    private fun sortFavoritesFirst() {
-        effects.sortBy { if (FavoritesStore.isFavorite(this, it.id)) 0 else 1 }
+    private fun rebuildList() {
+        val filtered = allEffects.filter { matchesCategory(it, currentCategory) }
+        val sorted = filtered.sortedBy { if (FavoritesStore.isFavorite(this, it.id)) 0 else 1 }
+        effects.clear()
+        effects.addAll(sorted)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun matchesCategory(e: VibroEffect, cat: String): Boolean = when (cat) {
+        "all" -> true
+        "custom" -> e.id.startsWith("custom_")
+        else -> e.category == cat
     }
 
     private fun toggleFavorite(effect: VibroEffect) {
         FavoritesStore.toggle(this, effect.id)
-        sortFavoritesFirst()
-        adapter.notifyDataSetChanged()
+        rebuildList()
     }
 
     private fun setupIntensity() {

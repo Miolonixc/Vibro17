@@ -14,7 +14,8 @@ data class VibroEffect(
     val icon: String,
     val timings: LongArray,
     val amplitudes: IntArray,
-    val repeat: Int = 0
+    val repeat: Int = 0,
+    val category: String = "tech"
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

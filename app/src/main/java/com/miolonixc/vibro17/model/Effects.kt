@@ -9,7 +9,7 @@ package com.miolonixc.vibro17.model
  */
 object Effects {
 
-    val ALL: List<VibroEffect> = listOf(
+    private val RAW: List<VibroEffect> = listOf(
         VibroEffect(
             id = "train",
             title = "Поезд",
@@ -219,6 +219,42 @@ object Effects {
             timings = longArrayOf(0, 200, 400, 180, 500, 160, 600, 140, 800, 120, 1000, 100, 1500),
             amplitudes = intArrayOf(0, 200, 0, 160, 0, 130, 0, 100, 0, 70, 0, 50, 0),
             repeat = 0
+        ),
+        VibroEffect(
+            id = "bee",
+            title = "Пчела",
+            subtitle = "Назойливое жужжание",
+            icon = "🐝",
+            timings = longArrayOf(0, 40, 20, 40, 20, 40, 20, 40, 20, 300),
+            amplitudes = intArrayOf(0, 150, 0, 150, 0, 150, 0, 150, 0, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "rocket",
+            title = "Ракета",
+            subtitle = "Взлёт с нарастающим гулом",
+            icon = "🚀",
+            timings = longArrayOf(0, 200, 180, 160, 140, 120, 100, 400),
+            amplitudes = intArrayOf(0, 120, 150, 180, 210, 240, 255, 0),
+            repeat = 0
+        ),
+        VibroEffect(
+            id = "ring",
+            title = "Звонок",
+            subtitle = "Телефонный вызов",
+            icon = "📞",
+            timings = longArrayOf(0, 120, 120, 120, 120, 120, 120, 400),
+            amplitudes = intArrayOf(0, 255, 0, 255, 0, 255, 0, 0),
+            repeat = -1
         )
     )
+
+    val ALL: List<VibroEffect> = RAW.map { it.copy(category = categoryOf(it.id)) }
+
+    private fun categoryOf(id: String): String = when (id) {
+        "train", "racing", "helicopter", "crawl" -> "transport"
+        "birds", "heartbeat", "rain", "purr", "bee" -> "nature"
+        "sleep" -> "scene"
+        else -> "tech"
+    }
 }
