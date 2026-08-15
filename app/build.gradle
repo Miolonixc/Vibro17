@@ -34,7 +34,7 @@ android {
     signingConfigs {
         create('release') {
             def ksPath = localProps['VIBRO17_KEYSTORE_FILE']
-            def ksFile = ksPath ? file(ksPath) : null
+            def ksFile = ksPath ? rootProject.file(ksPath) : null
             if (ksFile != null && ksFile.exists()) {
                 storeFile = ksFile
                 storePassword = localProps['VIBRO17_KEYSTORE_PASSWORD']
