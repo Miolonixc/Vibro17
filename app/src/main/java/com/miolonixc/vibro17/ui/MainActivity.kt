@@ -21,6 +21,15 @@ import com.miolonixc.vibro17.model.VibroEffect
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    companion object {
+        private val THEMES = mapOf(
+            "cyan" to R.style.Theme_Vibro17,
+            "classic" to R.style.Theme_Vibro17Classic,
+            "amber" to R.style.Theme_Vibro17Amber
+        )
+        private val THEME_ORDER = listOf("cyan", "classic", "amber")
+    }
     private lateinit var engine: VibrationEngine
     private lateinit var adapter: EffectAdapter
 
@@ -95,6 +104,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setAppTheme()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -120,6 +130,7 @@ class MainActivity : AppCompatActivity() {
             importLauncher.launch(arrayOf("application/json"))
         }
         binding.aboutBtn.setOnClickListener { showAbout() }
+        binding.themeBtn.setOnClickListener { cycleTheme() }
         setupIntensity()
 
         binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -181,6 +192,19 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    private fun setAppTheme() {
+        val key = getSharedPreferences("vibro_prefs", MODE_PRIVATE).getString("theme", "cyan") ?: "cyan"
+        setTheme(THEMES[key] ?: R.style.Theme_Vibro17)
+    }
+
+    private fun cycleTheme() {
+        val prefs = getSharedPreferences("vibro_prefs", MODE_PRIVATE)
+        val cur = prefs.getString("theme", "cyan") ?: "cyan"
+        val next = THEME_ORDER[(THEME_ORDER.indexOf(cur) + 1) % THEME_ORDER.size]
+        prefs.edit().putString("theme", next).apply()
+        recreate()
+    }
+
     private fun openEditor(effect: VibroEffect?) {
         val intent = Intent(this, CustomActivity::class.java)
         if (effect != null) {
@@ -230,9 +254,7 @@ class MainActivity : AppCompatActivity() {
         engine.play(effect)
         adapter.setActive(effect.id)
         binding.statusText.text = getString(R.string.status_playing, effect.title)
-        binding.statusText.setTextColor(
-            ContextCompat.getColor(this, R.color.cyan)
-        )
+        binding.statusText.setTextColor(Theme.accent(this))
         binding.liveDot.visibility = android.view.View.VISIBLE
         if (binding.liveDot.animation == null) {
             binding.liveDot.startAnimation(
@@ -247,9 +269,7 @@ class MainActivity : AppCompatActivity() {
         active = null
         adapter.setActive(null)
         binding.statusText.text = getString(R.string.status_idle)
-        binding.statusText.setTextColor(
-            ContextCompat.getColor(this, R.color.cyan_glow)
-        )
+        binding.statusText.setTextColor(Theme.accentDim(this))
         binding.liveDot.clearAnimation()
         binding.liveDot.visibility = android.view.View.INVISIBLE
         binding.visualizer.setActive(0, false)

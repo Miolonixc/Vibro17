@@ -14,7 +14,7 @@
         android:textSize="26sp"
         android:textStyle="bold"
         android:letterSpacing="0.12"
-        android:textColor="@color/cyan" />
+        android:textColor="?attr/vibroAccent" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:hint="Название эффекта"
-        app:boxStrokeColor="@color/cyan_dim"
-        app:hintTextColor="@color/cyan">
+        app:boxStrokeColor="?attr/vibroAccentDim"
+        app:hintTextColor="?attr/vibroAccent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/nameInput"
@@ -61,7 +61,7 @@
         android:text="+ Добавить шаг"
         android:textAllCaps="false"
         android:backgroundTint="@color/surface_raised"
-        android:textColor="@color/cyan" />
+        android:textColor="?attr/vibroAccent" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -77,7 +77,7 @@
             android:layout_marginEnd="6dp"
             android:text="▶ Предпросмотр"
             android:textAllCaps="false"
-            android:backgroundTint="@color/cyan_dim"
+            android:backgroundTint="?attr/vibroAccentDim"
             android:textColor="@color/black" />
 
         <Button
@@ -88,7 +88,7 @@
             android:layout_marginStart="6dp"
             android:text="💾 Сохранить"
             android:textAllCaps="false"
-            android:backgroundTint="@color/cyan"
+            android:backgroundTint="?attr/vibroAccent"
             android:textColor="@color/black" />
     </LinearLayout>
 

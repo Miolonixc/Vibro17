@@ -15,7 +15,7 @@
         android:textSize="34sp"
         android:textStyle="bold"
         android:letterSpacing="0.15"
-        android:textColor="@color/cyan"
+        android:textColor="?attr/vibroAccent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -48,7 +48,7 @@
         android:padding="10dp"
         android:background="@drawable/bg_status"
         android:text="@string/status_idle"
-        android:textColor="@color/cyan_glow"
+        android:textColor="?attr/vibroAccent"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/subtitleMain"
         app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +80,7 @@
             android:textSize="13sp"
             android:contentDescription="Экспорт"
             android:backgroundTint="@color/surface_raised"
-            android:textColor="@color/cyan" />
+            android:textColor="?attr/vibroAccent" />
 
         <Button
             android:id="@+id/importBtn"
@@ -91,7 +91,7 @@
             android:textSize="13sp"
             android:contentDescription="Импорт"
             android:backgroundTint="@color/surface_raised"
-            android:textColor="@color/cyan" />
+            android:textColor="?attr/vibroAccent" />
 
         <Button
             android:id="@+id/aboutBtn"
@@ -102,7 +102,18 @@
             android:textSize="16sp"
             android:contentDescription="О приложении"
             android:backgroundTint="@color/surface_raised"
-            android:textColor="@color/cyan" />
+            android:textColor="?attr/vibroAccent" />
+
+        <Button
+            android:id="@+id/themeBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="🎨"
+            android:textSize="16sp"
+            android:contentDescription="Сменить тему"
+            android:backgroundTint="@color/surface_raised"
+            android:textColor="?attr/vibroAccent" />
     </LinearLayout>
 
     <LinearLayout
@@ -131,8 +142,8 @@
             android:layout_marginStart="10dp"
             android:max="100"
             android:progress="100"
-            android:progressTint="@color/cyan"
-            android:thumbTint="@color/cyan" />
+            android:progressTint="?attr/vibroAccent"
+            android:thumbTint="?attr/vibroAccent" />
 
         <TextView
             android:id="@+id/intensityValue"
@@ -141,7 +152,7 @@
             android:layout_marginStart="8dp"
             android:text="100%"
             android:textSize="13sp"
-            android:textColor="@color/cyan" />
+            android:textColor="?attr/vibroAccent" />
     </LinearLayout>
 
     <HorizontalScrollView
@@ -233,10 +244,10 @@
         android:layout_margin="16dp"
         android:contentDescription="Редактор"
         android:src="@android:drawable/ic_menu_edit"
-        app:backgroundTint="@color/surface_raised"
-        app:tint="@color/cyan"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            app:backgroundTint="@color/surface_raised"
+            app:tint="?attr/vibroAccent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/stopFab"
@@ -245,7 +256,7 @@
         android:layout_margin="16dp"
         android:contentDescription="Стоп"
         android:src="@android:drawable/ic_menu_close_clear_cancel"
-        app:backgroundTint="@color/cyan"
+        app:backgroundTint="?attr/vibroAccent"
         app:tint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

@@ -7,8 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.AttributeSet
 import android.view.View
-import androidx.core.content.ContextCompat
-import com.miolonixc.vibro17.R
+import com.miolonixc.vibro17.ui.Theme
 
 /**
  * Lightweight waveform visualizer. While playing it draws an animated sine wave
@@ -25,13 +24,13 @@ class VisualizerView @JvmOverloads constructor(
         style = Paint.Style.STROKE
         strokeWidth = 4f
         isAntiAlias = true
-        color = ContextCompat.getColor(context, R.color.cyan)
+        color = Theme.accent(context)
     }
     private val dimPaint = Paint().apply {
         style = Paint.Style.STROKE
         strokeWidth = 2f
         isAntiAlias = true
-        color = ContextCompat.getColor(context, R.color.cyan_dim)
+        color = Theme.accentDim(context)
     }
 
     private var amplitude = 0f

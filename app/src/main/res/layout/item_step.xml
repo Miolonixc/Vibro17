@@ -45,8 +45,8 @@
         android:layout_height="wrap_content"
         android:max="600"
         android:progress="80"
-        android:progressTint="@color/cyan"
-        android:thumbTint="@color/cyan" />
+        android:progressTint="?attr/vibroAccent"
+        android:thumbTint="?attr/vibroAccent" />
 
     <TextView
         android:id="@+id/amplitudeLabel"
@@ -62,7 +62,7 @@
         android:layout_height="wrap_content"
         android:max="255"
         android:progress="255"
-        android:progressTint="@color/cyan"
-        android:thumbTint="@color/cyan" />
+        android:progressTint="?attr/vibroAccent"
+        android:thumbTint="?attr/vibroAccent" />
 
 </LinearLayout>

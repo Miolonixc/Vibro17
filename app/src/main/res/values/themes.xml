@@ -12,5 +12,25 @@
         <item name="android:statusBarColor">@color/black</item>
         <item name="android:navigationBarColor">@color/black</item>
         <item name="android:windowBackground">@color/black</item>
+        <item name="vibroAccent">@color/cyan</item>
+        <item name="vibroAccentDim">@color/cyan_dim</item>
+    </style>
+
+    <!-- Classic green accent -->
+    <style name="Theme.Vibro17Classic" parent="Theme.Vibro17">
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorSecondary">@color/green</item>
+        <item name="colorPrimaryVariant">@color/green_dim</item>
+        <item name="vibroAccent">@color/green</item>
+        <item name="vibroAccentDim">@color/green_dim</item>
+    </style>
+
+    <!-- Amber accent -->
+    <style name="Theme.Vibro17Amber" parent="Theme.Vibro17">
+        <item name="colorPrimary">@color/amber</item>
+        <item name="colorSecondary">@color/amber</item>
+        <item name="colorPrimaryVariant">@color/amber_dim</item>
+        <item name="vibroAccent">@color/amber</item>
+        <item name="vibroAccentDim">@color/amber_dim</item>
     </style>
 </resources>

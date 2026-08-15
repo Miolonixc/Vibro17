@@ -56,6 +56,6 @@
             android:padding="8dp"
             android:textSize="18sp"
             android:text="☆"
-            android:textColor="@color/cyan" />
+            android:textColor="?attr/vibroAccent" />
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
