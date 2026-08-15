@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var active: VibroEffect? = null
+    private var selectedId: String? = null
 
     private val sceneHandler = Handler(Looper.getMainLooper())
     private var partyActive = false
@@ -187,6 +188,9 @@ class MainActivity : AppCompatActivity() {
         binding.partyBtn.setOnClickListener { toggleParty() }
         binding.sleepBtn.setOnClickListener { toggleSleep() }
         setupIntensity()
+
+        selectedId = getSharedPreferences("vibro_prefs", MODE_PRIVATE).getString("last_effect", null)
+        if (selectedId != null) adapter.setActive(selectedId)
 
         binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId == View.NO_ID) return@setOnCheckedChangeListener
@@ -307,6 +311,9 @@ class MainActivity : AppCompatActivity() {
     private fun startEffect(effect: VibroEffect) {
         stopScenes()
         active = effect
+        selectedId = effect.id
+        getSharedPreferences("vibro_prefs", MODE_PRIVATE)
+            .edit().putString("last_effect", effect.id).apply()
         engine.play(effect)
         adapter.setActive(effect.id)
         binding.statusText.text = getString(R.string.status_playing, effect.title)
@@ -365,7 +372,10 @@ class MainActivity : AppCompatActivity() {
         sleepActive = true
         sleepTotal = minutes * 60_000L
         sleepEndTime = System.currentTimeMillis() + sleepTotal
-        sleepEffect = active ?: allEffects.find { it.id == "sleep" } ?: allEffects.first()
+        sleepEffect = active
+            ?: allEffects.firstOrNull { it.id == selectedId }
+            ?: allEffects.find { it.id == "sleep" }
+            ?: allEffects.first()
         sleepIssued = false
         lastSleepScale = 1f
         updateSceneButtons()
