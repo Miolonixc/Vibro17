@@ -23,6 +23,45 @@ class MainActivity : AppCompatActivity() {
 
     private val effects = Effects.ALL.toMutableList()
 
+    private val exportLauncher = registerForActivityResult(
+        ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+        try {
+            val customs = CustomStore.load(this)
+            val json = CustomStore.toJsonString(customs)
+            contentResolver.openOutputStream(uri)?.use { it.write(json.toByteArray()) }
+            Toast.makeText(this, "Экспортировано: ${customs.size}", Toast.LENGTH_SHORT).show()
+        } catch (_: Exception) {
+            Toast.makeText(this, "Ошибка экспорта", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private val importLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri == null) return@registerForActivityResult
+        try {
+            val text = contentResolver.openInputStream(uri)
+                ?.bufferedReader()?.use { it.readText() } ?: return@registerForActivityResult
+            val parsed = CustomStore.parseJson(text)
+            parsed.forEach { eff ->
+                CustomStore.add(this, eff)
+                val i = effects.indexOfFirst { it.id == eff.id }
+                if (i >= 0) {
+                    effects[i] = eff
+                    adapter.notifyItemChanged(i)
+                } else {
+                    effects.add(eff)
+                    adapter.notifyItemInserted(effects.lastIndex)
+                }
+            }
+            Toast.makeText(this, "Импортировано: ${parsed.size}", Toast.LENGTH_SHORT).show()
+        } catch (_: Exception) {
+            Toast.makeText(this, "Ошибка импорта", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private var active: VibroEffect? = null
 
     private val editorLauncher = registerForActivityResult(
@@ -82,6 +121,12 @@ class MainActivity : AppCompatActivity() {
 
         binding.stopFab.setOnClickListener { stopEffect() }
         binding.editorFab.setOnClickListener { openEditor(null) }
+        binding.exportBtn.setOnClickListener {
+            exportLauncher.launch("vibro17-effects.json")
+        }
+        binding.importBtn.setOnClickListener {
+            importLauncher.launch(arrayOf("application/json"))
+        }
     }
 
     private fun openEditor(effect: VibroEffect?) {
@@ -142,6 +187,7 @@ class MainActivity : AppCompatActivity() {
                 AnimationUtils.loadAnimation(this, R.anim.blink)
             )
         }
+        binding.visualizer.setActive(effect.amplitudes.maxOrNull() ?: 0, true)
     }
 
     private fun stopEffect() {
@@ -154,6 +200,7 @@ class MainActivity : AppCompatActivity() {
         )
         binding.liveDot.clearAnimation()
         binding.liveDot.visibility = android.view.View.INVISIBLE
+        binding.visualizer.setActive(0, false)
     }
 
     override fun onPause() {

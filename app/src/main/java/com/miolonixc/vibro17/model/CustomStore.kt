@@ -42,6 +42,19 @@ object CustomStore {
 
     fun isCustom(id: String): Boolean = id.startsWith("custom_")
 
+    fun toJsonString(list: List<VibroEffect>): String {
+        val array = JSONArray()
+        list.forEach { array.put(toJson(it)) }
+        return array.toString(2)
+    }
+
+    fun parseJson(text: String): List<VibroEffect> {
+        val array = JSONArray(text)
+        return (0 until array.length()).mapNotNull { i ->
+            runCatching { fromJson(array.getJSONObject(i)) }.getOrNull()
+        }
+    }
+
     fun save(context: Context, list: List<VibroEffect>) {
         val array = JSONArray()
         list.forEach { array.put(toJson(it)) }
