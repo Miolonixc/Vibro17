@@ -2,6 +2,7 @@ package com.miolonixc.vibro17.ui
 
 import android.content.Context
 import androidx.annotation.AttrRes
+import com.miolonixc.vibro17.R
 
 object Theme {
     fun accent(context: Context, @AttrRes attr: Int = R.attr.vibroAccent, fallback: Int = 0xFF00E5FF.toInt()): Int {
