@@ -165,7 +165,6 @@ class MainActivity : AppCompatActivity() {
         engine = VibrationEngine(this)
 
         allEffects.addAll(CustomStore.load(this))
-        rebuildList()
 
         adapter = EffectAdapter(
             effects,
@@ -174,6 +173,8 @@ class MainActivity : AppCompatActivity() {
             { effect -> toggleFavorite(effect) }
         )
         binding.effectGrid.adapter = adapter
+
+        rebuildList()
 
         binding.stopFab.setOnClickListener { stopEffect() }
         binding.editorFab.setOnClickListener { openEditor(null) }
