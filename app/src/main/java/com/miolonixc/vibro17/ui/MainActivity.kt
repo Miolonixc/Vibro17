@@ -14,6 +14,7 @@ import com.miolonixc.vibro17.databinding.ActivityMainBinding
 import com.miolonixc.vibro17.engine.VibrationEngine
 import com.miolonixc.vibro17.model.CustomStore
 import com.miolonixc.vibro17.model.Effects
+import com.miolonixc.vibro17.model.FavoritesStore
 import com.miolonixc.vibro17.model.VibroEffect
 
 class MainActivity : AppCompatActivity() {
