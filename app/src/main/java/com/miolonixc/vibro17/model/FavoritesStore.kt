@@ -23,4 +23,13 @@ object FavoritesStore {
 
     fun all(context: Context): Set<String> =
         prefs(context).getStringSet(KEY, emptySet()) ?: emptySet()
+
+    /** First favorited effect, or a sensible default if none is favorited. */
+    fun firstEffect(context: Context): VibroEffect {
+        val ids = all(context)
+        if (ids.isNotEmpty()) {
+            Effects.ALL.firstOrNull { ids.contains(it.id) }?.let { return it }
+        }
+        return Effects.ALL.first()
+    }
 }
