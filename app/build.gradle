@@ -8,7 +8,7 @@ plugins {
 // 0.x.0  – минорные обновления (новые эффекты, экраны)
 // x.0.0  – мажорные обновления (ломающие изменения, редизайн)
 // versionCode вычисляется из versionName: MAJOR*10000 + MINOR*100 + PATCH
-def versionNameValue = '0.6.0'
+def versionNameValue = '0.7.0'
 def versionParts = versionNameValue.tokenize('.').collect { it.toInteger() }
 def versionCodeValue = versionParts[0] * 10000 + versionParts[1] * 100 + versionParts[2]
 

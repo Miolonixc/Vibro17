@@ -1,7 +1,11 @@
 package com.miolonixc.vibro17.ui
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Toast
@@ -74,6 +78,55 @@ class MainActivity : AppCompatActivity() {
 
     private var active: VibroEffect? = null
 
+    private val sceneHandler = Handler(Looper.getMainLooper())
+    private var partyActive = false
+    private var sleepActive = false
+    private var sleepEndTime = 0L
+    private var sleepTotal = 0L
+    private var sleepEffect: VibroEffect? = null
+    private var sleepIssued = false
+    private var lastSleepScale = 1f
+
+    private val partyStep = object : Runnable {
+        override fun run() {
+            if (!partyActive) return
+            val eff = allEffects.random()
+            engine.play(eff.copy(repeat = -1))
+            active = eff
+            adapter.setActive(eff.id)
+            binding.statusText.text = "🎉 Вечеринка · ${eff.title}"
+            binding.statusText.setTextColor(Theme.accent(this@MainActivity))
+            binding.visualizer.setActive(eff.amplitudes.maxOrNull() ?: 0, true)
+            binding.liveDot.visibility = View.VISIBLE
+            sceneHandler.postDelayed(this, eff.timings.sum() + 450L)
+        }
+    }
+
+    private val sleepStep = object : Runnable {
+        override fun run() {
+            if (!sleepActive) return
+            val remaining = sleepEndTime - System.currentTimeMillis()
+            if (remaining <= 0) {
+                stopScenes()
+                return
+            }
+            val frac = (sleepTotal - remaining).toFloat() / sleepTotal
+            val scale = if (frac < 0.7f) 1f else (1f - (frac - 0.7f) / 0.3f).coerceAtLeast(0f)
+            if (!sleepIssued || kotlin.math.abs(scale - lastSleepScale) >= 0.06f) {
+                engine.play(sleepEffect!!.copy(repeat = 0), scale)
+                lastSleepScale = scale
+                sleepIssued = true
+                active = sleepEffect
+                adapter.setActive(sleepEffect!!.id)
+                binding.visualizer.setActive(sleepEffect!!.amplitudes.maxOrNull() ?: 0, true)
+                binding.liveDot.visibility = View.VISIBLE
+            }
+            binding.statusText.text = "🌙 Сон · осталось ${formatMs(remaining)}"
+            binding.statusText.setTextColor(Theme.accent(this@MainActivity))
+            sceneHandler.postDelayed(this, 1000L)
+        }
+    }
+
     private val editorLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -131,6 +184,8 @@ class MainActivity : AppCompatActivity() {
         }
         binding.aboutBtn.setOnClickListener { showAbout() }
         binding.themeBtn.setOnClickListener { cycleTheme() }
+        binding.partyBtn.setOnClickListener { toggleParty() }
+        binding.sleepBtn.setOnClickListener { toggleSleep() }
         setupIntensity()
 
         binding.chipGroup.setOnCheckedChangeListener { _, checkedId ->
@@ -250,6 +305,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startEffect(effect: VibroEffect) {
+        stopScenes()
         active = effect
         engine.play(effect)
         adapter.setActive(effect.id)
@@ -265,6 +321,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun stopEffect() {
+        stopScenes()
         engine.stop()
         active = null
         adapter.setActive(null)
@@ -275,13 +332,90 @@ class MainActivity : AppCompatActivity() {
         binding.visualizer.setActive(0, false)
     }
 
+    private fun toggleParty() {
+        val was = partyActive
+        stopScenes()
+        if (!was) startParty()
+    }
+
+    private fun toggleSleep() {
+        val was = sleepActive
+        stopScenes()
+        if (!was) showSleepDialog()
+    }
+
+    private fun startParty() {
+        partyActive = true
+        updateSceneButtons()
+        sceneHandler.post(partyStep)
+    }
+
+    private fun showSleepDialog() {
+        val options = arrayOf("5 минут", "15 минут", "30 минут", "60 минут")
+        val minutes = intArrayOf(5, 15, 30, 60)
+        AlertDialog.Builder(this)
+            .setTitle("🌙 Режим сна")
+            .setMessage("Эффект будет играть в цикле и плавно затихать к концу таймера.")
+            .setItems(options) { _, which -> startSleep(minutes[which]) }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    private fun startSleep(minutes: Int) {
+        sleepActive = true
+        sleepTotal = minutes * 60_000L
+        sleepEndTime = System.currentTimeMillis() + sleepTotal
+        sleepEffect = active ?: allEffects.find { it.id == "sleep" } ?: allEffects.first()
+        sleepIssued = false
+        lastSleepScale = 1f
+        updateSceneButtons()
+        sceneHandler.post(sleepStep)
+    }
+
+    private fun stopScenes() {
+        val wasActive = partyActive || sleepActive
+        partyActive = false
+        sleepActive = false
+        sceneHandler.removeCallbacks(partyStep)
+        sceneHandler.removeCallbacks(sleepStep)
+        updateSceneButtons()
+        if (wasActive) {
+            engine.stop()
+            binding.liveDot.clearAnimation()
+            binding.liveDot.visibility = View.INVISIBLE
+            binding.visualizer.setActive(0, false)
+            binding.statusText.text = getString(R.string.status_idle)
+            binding.statusText.setTextColor(Theme.accentDim(this))
+        }
+    }
+
+    private fun updateSceneButtons() {
+        fun tint(btn: View, on: Boolean) {
+            btn.backgroundTintList = ColorStateList.valueOf(
+                if (on) Theme.accent(this) else ContextCompat.getColor(this, R.color.surface_raised)
+            )
+            (btn as? android.widget.Button)?.setTextColor(if (on) Color.BLACK else Theme.accent(this))
+        }
+        tint(binding.partyBtn, partyActive)
+        tint(binding.sleepBtn, sleepActive)
+    }
+
+    private fun formatMs(ms: Long): String {
+        val total = ms / 1000
+        val m = total / 60
+        val s = total % 60
+        return "%02d:%02d".format(m, s)
+    }
+
     override fun onPause() {
         super.onPause()
+        stopScenes()
         engine.stop()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        stopScenes()
         engine.stop()
     }
 }

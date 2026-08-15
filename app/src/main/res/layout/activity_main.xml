@@ -105,6 +105,28 @@
             android:textColor="?attr/vibroAccent" />
 
         <Button
+            android:id="@+id/partyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="🎉"
+            android:textSize="16sp"
+            android:contentDescription="Режим вечеринки"
+            android:backgroundTint="@color/surface_raised"
+            android:textColor="?attr/vibroAccent" />
+
+        <Button
+            android:id="@+id/sleepBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:text="🌙"
+            android:textSize="16sp"
+            android:contentDescription="Режим сна"
+            android:backgroundTint="@color/surface_raised"
+            android:textColor="?attr/vibroAccent" />
+
+        <Button
             android:id="@+id/themeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

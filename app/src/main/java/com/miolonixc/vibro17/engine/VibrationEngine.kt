@@ -29,15 +29,16 @@ class VibrationEngine(context: Context) {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && vibrator.hasAmplitudeControl()
 
     @SuppressLint("MissingPermission")
-    fun play(effect: VibroEffect) {
+    fun play(effect: VibroEffect, ampScale: Float = 1f) {
+        val scale = (intensity * ampScale).coerceIn(0f, 1f)
         val base = if (effect.amplitudes.size == effect.timings.size) {
             effect.amplitudes
         } else {
             // Defensive: never let a malformed effect crash the app.
             IntArray(effect.timings.size) { i -> effect.amplitudes.getOrElse(i) { 0 } }
         }
-        val amplitudes = if (intensity < 1.0f) {
-            IntArray(base.size) { i -> (base[i] * intensity).toInt().coerceAtMost(255) }
+        val amplitudes = if (scale < 1.0f) {
+            IntArray(base.size) { i -> (base[i] * scale).toInt().coerceAtMost(255) }
         } else {
             base
         }
